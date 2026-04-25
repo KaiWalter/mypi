@@ -1,5 +1,5 @@
 {
-  description = "Pi coding agent dev environment with Node.js 24";
+  description = "Pi coding agent dev environment with Node.js";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -19,6 +19,7 @@
           inherit system;
           config.allowUnfree = true;
         };
+        piCodingAgentVersion = "0.70.2";
       in
       {
         devShells.default = pkgs.mkShell {
@@ -45,8 +46,8 @@
             export AZURE_OPENAI_API_KEY=$(op item get "Azure OpenAI API Key" --vault Private --fields label=key --format json | jq -r '.value')
             export AZURE_OPENAI_BASE_URL="$(op item get "Azure OpenAI API Key" --vault Private --fields label=url --format json | jq -r '.value')/openai/v1"
 
-            if ! npm list -g @mariozechner/pi-coding-agent@0.70.0 > /dev/null 2>&1; then
-              npm install -g @mariozechner/pi-coding-agent@0.70.0
+            if ! npm list -g @mariozechner/pi-coding-agent@${piCodingAgentVersion} > /dev/null 2>&1; then
+              npm install -g @mariozechner/pi-coding-agent@${piCodingAgentVersion}
             fi
 
             exec pi
