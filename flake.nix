@@ -6,20 +6,22 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs =
-    {
-      self,
-      nixpkgs,
-      flake-utils,
-    }:
+  outputs = {
+    self,
+    nixpkgs,
+    flake-utils,
+  }:
     flake-utils.lib.eachDefaultSystem (
-      system:
-      let
+      system: let
         pkgs = import nixpkgs {
           inherit system;
           config.allowUnfree = true;
         };
         piCodingAgentVersion = "0.70.2";
+        # Use the vendored local pi-telegram extension so our modifications are picked up.
+        extTelegram = "./vendor/pi-telegram";
+        extSkillShell = "npm:pi-skills-sh";
+        extComputerUse = "git:github.com/injaneity/pi-computer-use";
         commonBuildInputs = with pkgs; [
           nodejs_24
           _1password-cli
@@ -46,14 +48,43 @@
             npm install -g @mariozechner/pi-coding-agent@${piCodingAgentVersion}
           fi
         '';
-      in
-      {
+        notesSystemPrompt = ''
+          You are Q&A assistant working exclusively on Obsidian Vault '~/OneDrive - Carl Zeiss AG/Notes' using skill 'obsidian-vault-qa'.
+          In this vault, the Contacts/ sub-folder contains all persons I am in contact with, maintained as dossier-style notes.
+          When identifying, listing, or answering questions about people, prefer Contacts/ over other folders whenever possible.
+        '';
+      in {
         devShells.default = pkgs.mkShell {
           buildInputs = commonBuildInputs;
-          shellHook = commonShellHook + ''
+          shellHook =
+            commonShellHook
+            + ''
 
-            exec pi -e git:github.com/badlogic/pi-telegram "/telegram-connect"
-          '';
+              exec pi -e ${extTelegram} -e ${extSkillShell} "/telegram-connect"
+
+            '';
+        };
+
+        devShells.notes = pkgs.mkShell {
+          buildInputs = commonBuildInputs;
+          shellHook =
+            commonShellHook
+            + ''
+
+              exec pi -e ${extTelegram} --system-prompt ${builtins.toJSON notesSystemPrompt} "/telegram-connect"
+
+            '';
+        };
+
+        devShells.computer-use = pkgs.mkShell {
+          buildInputs = commonBuildInputs;
+          shellHook =
+            commonShellHook
+            + ''
+
+              exec pi -e ${extTelegram} -e ${extSkillShell} -e ${extComputerUse} "/telegram-connect"
+
+            '';
         };
 
         devShells.shell = pkgs.mkShell {
@@ -63,10 +94,12 @@
 
         devShells.mini = pkgs.mkShell {
           buildInputs = commonBuildInputs;
-          shellHook = commonShellHook + ''
+          shellHook =
+            commonShellHook
+            + ''
 
-            exec pi
-          '';
+              exec pi
+            '';
         };
 
         formatter = pkgs.alejandra;
