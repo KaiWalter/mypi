@@ -10,7 +10,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Iterable
 
-DEFAULT_VAULT = Path("/Users/y1wle/OneDrive - Carl Zeiss AG/Notes")
+DEFAULT_VAULT = Path(os.environ.get("OBSIDIAN_VAULT_PATH", "~/Documents/Notes")).expanduser()
 IGNORED_DIRS = {".obsidian", ".git", "node_modules", ".trash"}
 WIKILINK_RE = re.compile(r"\[\[([^\]]+)\]\]")
 WORD_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9_-]*")

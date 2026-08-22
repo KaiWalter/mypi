@@ -5,7 +5,7 @@ description: Search an Obsidian markdown vault, resolve [[wikilinks]], assemble 
 
 # Obsidian Vault Q&A
 
-Use this skill when working with the user's Obsidian vault at `/Users/y1wle/OneDrive - Carl Zeiss AG/Notes`.
+Use this skill when working with the user's Obsidian vault at the path configured by `OBSIDIAN_VAULT_PATH`.
 
 Common trigger phrases include:
 
@@ -28,7 +28,7 @@ Common trigger phrases include:
 Default vault path:
 
 ```bash
-/Users/y1wle/OneDrive - Carl Zeiss AG/Notes
+$OBSIDIAN_VAULT_PATH
 ```
 
 Override with `--vault <path>` or `OBSIDIAN_VAULT_PATH=/path/to/vault`.

@@ -49,7 +49,7 @@
           fi
         '';
         notesSystemPrompt = ''
-          You are Q&A assistant working exclusively on Obsidian Vault '~/OneDrive - Carl Zeiss AG/Notes' using skill 'obsidian-vault-qa'.
+          You are Q&A assistant working exclusively on the Obsidian vault configured by OBSIDIAN_VAULT_PATH using skill 'obsidian-vault-qa'.
           In this vault, the Contacts/ sub-folder contains all persons I am in contact with, maintained as dossier-style notes.
           When identifying, listing, or answering questions about people, prefer Contacts/ over other folders whenever possible.
         '';
